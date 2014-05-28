@@ -145,9 +145,13 @@ Grid.prototype.maxCellMove = function(director) {
   	if (this.withinBounds(newMaxCell)) {
   		// will move, move to which position?
   		if(newMaxCell.x == maxCell.x) {
-  			if((newMaxCell.y == 0 && maxCell.y == 3) || (newMaxCell.y == 3 && maxCell.y == 0))
+  			if((maxCell.y == 3 && newMaxCell.y == 2) || (newMaxCell.y == 1 && maxCell.y == 0)){
+  				return true;
+  			} 
   		} else {
-  			
+  			if ((newMaxCell.x == 3 && maxCell.x == 2) || (newMaxCell.x == 1 && maxCell.x == 0)) {
+  				return true;
+  			}
   		}
   	} else {
   		// won't move

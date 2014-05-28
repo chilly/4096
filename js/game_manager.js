@@ -177,7 +177,7 @@ GameManager.prototype.move = function (direction) {
 
   if (this.isGameTerminated()) return; // Don't do anything if the game's over
   if (this.grid.maxCellMove(direction)) {
-    var mes=confirm("È·¶¨ÒªÒÆ¶¯×î´óÖµÂğ£¿");
+    var mes=confirm("ä½ ç¡®å®šè¦ç§»åŠ¨æœ€å¤§å€¼å—ï¼Ÿ");
     if(!mes) {
       return;
     }
