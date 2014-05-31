@@ -77,6 +77,9 @@ GameManager.prototype.addRandomTile = function (isStart) {
   		// which position will merge many?
   		// add which value
   		// simplest is put 2 or 4 near 2 and 4
+  		if(this.canMergeAlmostMax()) {
+  			return;
+  		}
   		var cell2 = this.grid.availableContentCell(2);
   		var cell4 = this.grid.availableContentCell(4);
   		if (cell2.x === -1 && cell4.x === -1) {
@@ -100,6 +103,86 @@ GameManager.prototype.addRandomTile = function (isStart) {
   	}
   }
 };
+
+GameManager.prototype.canMergeAlmostMax = function () {
+	// for sort
+	var cells = [];
+	for (var x = 0; x < this.size; x++) {
+	    for (var y = 0; y < this.size; y++) {
+	    	if(this.grid.cells[x][y]) {
+	    		cells.push({x:x,y:y,val:this.grid.cells[x][y].value});
+	    	}
+	    }
+	}
+	this.grid.sort(cells, -1, cells.length, this.grid.spaceComparor);
+	var vector = [
+		{x:-1,y:-1},
+		{x:-1,y:1},
+		{x:1,y:1},
+		{x:1,y:-1},
+	];
+	for(var i=0; i < cells.length ; i++) {
+		if (cells[i].value < 32){
+			break;
+		}
+		for(var j = 0; j < vector.length; j++) {
+			var tmpcell = {x:cells[i].x+vector[j].x, y:cells[i].y+vector[j].y};
+			if (this.grid.withinBounds(tmpcell) && this.grid.cells[tmpcell.x][tmpcell.y] && this.grid.cells[tmpcell.x][tmpcell.y].value === cells[i].value) {
+				// may be should add tile in tmpcell line.
+				switch(j) {
+					case 0:
+					case 1:
+						var emptyCell1=this.canFindNextEmptyTile(tmpcell.x, tmpcell.y, 1);
+						if (emptyCell1.x != -1) {
+							if(canFindNextEmptyTile(emptyCell.x, emptyCell.y, 1)) {
+								this.addRandomTileHelper(0.9);
+								return true;
+							}
+						}
+						break;
+					case 2:
+						var emptyCell1=this.canFindNextEmptyTile(tmpcell.x, tmpcell.y, 2);
+						if (emptyCell1.x != -1) {
+							if(canFindNextEmptyTile(emptyCell.x, emptyCell.y, 2)) {
+								this.addRandomTileHelper(0.9);
+								return true;
+							}
+						}
+					default:
+						break;
+				}
+			}
+		}
+	}
+	return false;
+};
+GameManager.prototype.canFindNextEmptyTile = function(x,y, director) {
+	return this.FindNextEmptyTile(x,y,director).x !== -1;
+}
+
+// 0 for left, 1 for right, 2 for up, 3 for down
+GameManager.prototype.FindNextEmptyTile = function(x,y, director) {
+	var iterStep = 1;
+	if (director == 0 || director == 2) {
+		iterStep = -1;
+	}
+	var iterKey = x;
+	if (director == 2||director == 3) {
+		iterKey = y;
+	}
+	for (var k = iterKey + iterStep; k >= 0 && k < this.grid.size; k+=iterStep) {
+		if(director == 2||director == 3) {
+			if (!this.grid.cells[x][k]) {
+				return {x:x,y:k};
+			}
+		} else {
+			if (!this.grid.cells[k][y]) {
+				return {x:k,y:y};
+			}
+		}
+	}
+	return {x:-1,y:-1};
+}
 
 GameManager.prototype.addRandomTileHelper = function (rate, t) {
   		var value = Math.random() < rate ? 2 : 4;

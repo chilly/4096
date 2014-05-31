@@ -141,15 +141,19 @@ Grid.prototype.maxCellMove = function(director) {
 	    3: { x: -1, y: 0 }   // Left
   	};
   	var directVector = map[director];
+  	if(!this.moveLine(maxCell.x, maxCell.y, director)) {
+  		return false;
+  	}
   	var newMaxCell = {x:maxCell.x+directVector.x, y:maxCell.y+directVector.y, value:maxCell.value};
   	if (this.withinBounds(newMaxCell)) {
   		// will move, move to which position?
+  		
   		if(newMaxCell.x == maxCell.x) {
-  			if((maxCell.y == 3 && newMaxCell.y == 2) || (newMaxCell.y == 1 && maxCell.y == 0)){
+  			if((maxCell.y == 3 && newMaxCell.y <= 2) || (newMaxCell.y >= 1 && maxCell.y == 0)){
   				return true;
   			} 
   		} else {
-  			if ((newMaxCell.x == 3 && maxCell.x == 2) || (newMaxCell.x == 1 && maxCell.x == 0)) {
+  			if ((maxCell.x == 3 && newMaxCell.x <= 2) || (newMaxCell.x >= 1 && maxCell.x == 0)) {
   				return true;
   			}
   		}
@@ -157,7 +161,48 @@ Grid.prototype.maxCellMove = function(director) {
   		// won't move
   		return false;
   	}
-  	
+};
+Grid.prototype.moveLine = function(x,y, director) {
+	var iterStep = 1;
+	if (director == 0 || director == 2) {
+		iterStep = -1;
+	}
+	var iterKey = x;
+	if (director == 2||director == 3) {
+		iterKey = y;
+	}
+	var lastvalue;
+	for (var k = iterKey + iterStep; k >= 0 && k < this.size; k+=iterStep) {
+		if(director == 2||director == 3) {
+			
+			if (!this.cells[x][k]) {
+				return true;
+			} else {
+				if(!lastvalue) {
+					lastvalue = this.cells[x][k].value;
+				} else {
+					if (lastvalue === this.cells[x][k].value) {
+						return true;
+					}
+				}
+				
+			}
+		} else {
+			if (!this.cells[k][y]) {
+				return true;
+			} else {
+				if(!lastvalue) {
+					lastvalue = this.cells[k][y].value;
+				} else {
+					if (lastvalue === this.cells[k][y].value) {
+						return true;
+					}
+				}
+			
+			}
+		}
+	}
+	return false;
 }
 
 Grid.prototype.availableMaxSpaceCell = function(content) {
@@ -182,7 +227,7 @@ Grid.prototype.availableMaxSpaceCell = function(content) {
 	    }
   	}
   	this.sort(cells, -1, cells.length, this.spaceComparor);
-  	return cells[0];
+  	return cells[cells.length-1];
 };
 
 Grid.prototype.spaceComparor = function(i, j) {
