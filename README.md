@@ -19,3 +19,7 @@ Changes and improvements are more than welcome!
 ## License
 4096 is licensed under the [GPL license.](https://github.com/chillyc/4096/LICENSE)
 
+## 捐赠者 (排名无先后优劣之分)
+舔靴子的猫
+逆水之寒
+丹士米克87
