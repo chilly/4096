@@ -162,22 +162,26 @@ Grid.prototype.maxCellMove = function(director) {
   		return false;
   	}
 };
+
+
 Grid.prototype.moveLine = function(x,y, director) {
 	var iterStep = 1;
-	if (director == 0 || director == 2) {
+	if (director == 0 || director == 3) {
 		iterStep = -1;
 	}
 	var iterKey = x;
-	if (director == 2||director == 3) {
+	if (director == 0||director == 2) {
 		iterKey = y;
 	}
 	var lastvalue;
+	var first = true;
 	for (var k = iterKey + iterStep; k >= 0 && k < this.size; k+=iterStep) {
-		if(director == 2||director == 3) {
-			
-			if (!this.cells[x][k]) {
+		
+		if(director == 0||director == 2) {
+			if (!first && !this.cells[x][k]) {
 				return true;
 			} else {
+				first = false;
 				if(!lastvalue) {
 					lastvalue = this.cells[x][k].value;
 				} else {
@@ -188,9 +192,10 @@ Grid.prototype.moveLine = function(x,y, director) {
 				
 			}
 		} else {
-			if (!this.cells[k][y]) {
+			if (!first &&!this.cells[k][y]) {
 				return true;
 			} else {
+				first = false;
 				if(!lastvalue) {
 					lastvalue = this.cells[k][y].value;
 				} else {
@@ -203,12 +208,12 @@ Grid.prototype.moveLine = function(x,y, director) {
 		}
 	}
 	return false;
-}
+};
 
 Grid.prototype.availableMaxSpaceCell = function(content) {
 	var cells = [];
 	var xarr = [0,1,0,-1];
-  	var yarr = [1,0,-1,0];
+  	var yarr = [-1,0,1,0];
 	for (var x = 0; x < this.size; x++) {
 	    for (var y = 0; y < this.size; y++) {
 			if(!this.cells[x][y]) {
