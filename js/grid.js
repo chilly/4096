@@ -144,6 +144,9 @@ Grid.prototype.maxCellMove = function(director) {
   	if(!this.moveLine(maxCell.x, maxCell.y, director)) {
   		return false;
   	}
+  	if(this.isInCorner(maxCell.x,maxCell.y)) {
+  		return false;
+  	}
   	var newMaxCell = {x:maxCell.x+directVector.x, y:maxCell.y+directVector.y, value:maxCell.value};
   	if (this.withinBounds(newMaxCell)) {
   		// will move, move to which position?
@@ -163,6 +166,16 @@ Grid.prototype.maxCellMove = function(director) {
   	}
 };
 
+Grid.prototype.isInCorner = function(x,y) {
+	if(x == 0 && (y == 0 || y == 3)){
+		return true;
+	}
+	if(x == 3 && (y == 0 || y == 3)) {
+		return true;
+	}
+	return false;
+}
+
 
 Grid.prototype.moveLine = function(x,y, director) {
 	var iterStep = 1;
@@ -175,36 +188,36 @@ Grid.prototype.moveLine = function(x,y, director) {
 	}
 	var lastvalue;
 	var first = true;
-	for (var k = iterKey + iterStep; k >= 0 && k < this.size; k+=iterStep) {
+	for (var k = iterKey; k >= 0 && k < this.size; k+=iterStep) {
 		
 		if(director == 0||director == 2) {
-			if (!first && !this.cells[x][k]) {
+			if (first && !this.cells[x][k]) {
+				continue;
+			} else if(!first && !this.cells[x][k]) {
 				return true;
-			} else {
-				first = false;
-				if(!lastvalue) {
-					lastvalue = this.cells[x][k].value;
-				} else {
-					if (lastvalue === this.cells[x][k].value) {
-						return true;
-					}
-				}
-				
 			}
-		} else {
-			if (!first &&!this.cells[k][y]) {
-				return true;
-			} else {
+			if(first) {
 				first = false;
-				if(!lastvalue) {
-					lastvalue = this.cells[k][y].value;
-				} else {
-					if (lastvalue === this.cells[k][y].value) {
-						return true;
-					}
-				}
+			}
 			
+			if (lastvalue && lastvalue === this.cells[x][k].value) {
+				return true;
 			}
+			lastvalue = this.cells[x][k].value
+			
+		} else {
+			if (first && !this.cells[k][y]) {
+				continue;
+			} else if(!first && !this.cells[k][y]) {
+				return true;
+			}
+			if(first) {
+				first = false;
+			}
+			if (lastvalue && lastvalue === this.cells[k][y].value) {
+				return true;
+			}
+			lastvalue = this.cells[k][y].value
 		}
 	}
 	return false;

@@ -141,9 +141,10 @@ GameManager.prototype.canMergeAlmostMax = function () {
 						}
 						break;
 					case 2:
-						var emptyCell1=this.canFindNextEmptyTile(tmpcell.x, tmpcell.y, 2);
+					case 3:
+						var emptyCell1=this.canFindNextEmptyTile(tmpcell.x, tmpcell.y, 3);
 						if (emptyCell1.x != -1) {
-							if(canFindNextEmptyTile(emptyCell.x, emptyCell.y, 2)) {
+							if(canFindNextEmptyTile(emptyCell.x, emptyCell.y, 3)) {
 								this.addRandomTileHelper(0.9);
 								return true;
 							}
@@ -160,17 +161,17 @@ GameManager.prototype.canFindNextEmptyTile = function(x,y, director) {
 	return this.FindNextEmptyTile(x,y,director).x !== -1;
 }
 
-// 0 for left, 1 for right, 2 for up, 3 for down
+// 0 for up, 1 for right, 2 for down, 3 for left
 GameManager.prototype.FindNextEmptyTile = function(x,y, director) {
-	var iterStep = 1;
-	if (director == 0 || director == 2) {
+var iterStep = 1;
+	if (director == 0 || director == 3) {
 		iterStep = -1;
 	}
 	var iterKey = x;
-	if (director == 2||director == 3) {
+	if (director == 0||director == 2) {
 		iterKey = y;
 	}
-	for (var k = iterKey + iterStep; k >= 0 && k < this.grid.size; k+=iterStep) {
+	for (var k = iterKey+iterStep; k >= 0 && k < this.size; k+=iterStep) {
 		if(director == 2||director == 3) {
 			if (!this.grid.cells[x][k]) {
 				return {x:x,y:k};
