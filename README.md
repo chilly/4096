@@ -1,4 +1,4 @@
-# 2048
+# 4096
 A small clone of 2048
 I make it easy to play!! Change generating small block role
 
@@ -8,7 +8,6 @@ I make it easy to play!! Change generating small block role
   <img src="http://pictures.gabrielecirulli.com/2048-20140309-234100.png" alt="Screenshot"/>
 </p>
 
-That screenshot is fake, by the way. I never reached 2048 :smile:
 
 ## Contributing
 Changes and improvements are more than welcome! 
